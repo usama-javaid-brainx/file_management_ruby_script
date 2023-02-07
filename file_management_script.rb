@@ -43,6 +43,18 @@ class DirectoryTree
         end
     end
 
+    def print_deletable_directories(node = @root_directory)
+        if node.size <= 100000
+            puts "Directory: #{node.name}"
+            puts "   Size: #{node.size}"
+            @total_size_of_deletable_directories += node.size
+        end 
+        
+        node.children.each do |child|
+            print_deletable_directories(child)    
+        end
+    end
+
     def update_parent_child_size(file_size, node = @root_directory )
          if (node.name == '/') || @traversed_directories_list.include?(node.name)
             node.size += file_size
@@ -69,4 +81,9 @@ File.open("input.txt").each do |line_text|
         directory_tree.update_parent_child_size(line_text.gsub(/[^\d]/, '').to_i)
     end  
 end
-directory_tree.print_directory_tree
+
+puts "Deletable Directories List: \n"
+       
+directory_tree.print_deletable_directories
+
+puts "\nTotal Size: #{directory_tree.total_size_of_deletable_directories}"
